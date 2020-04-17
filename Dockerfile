@@ -10,7 +10,7 @@ RUN echo http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories 
     mkdir -p /home/node && \
     mkdir -p /home/node/.npm-global && \
     mkdir -p /home/node/app  && \
-    chown -R node: /home/node 
+    chown -R node: /home/node
 
 USER node
 
@@ -19,7 +19,7 @@ ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
 
 RUN cd /home/node && \
     npm install && \
-    npm run build 
+    npm run build
 
 USER root
 
@@ -28,8 +28,7 @@ RUN apk del gcc git
 USER node
 
 EXPOSE 8080
-ENV MUMBLE_SERVER=mumble.aventer.biz:64738
 
 ENTRYPOINT ["/sbin/tini", "--"]
-CMD websockify --ssl-target --web=/home/node/dist 8080 "$MUMBLE_SERVER"
+CMD websockify --cert="SSL_CRT" --key="SSL_KEY" --ssl-target --web=/home/node/dist 8080 "$MUMBLE_SERVER"
 
